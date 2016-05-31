@@ -1,8 +1,8 @@
-{-# LANGUAGE TemplateHaskell        #-}
-{-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE FlexibleContexts       #-}
 {-# LANGUAGE FlexibleInstances      #-}
 {-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses  #-}
+{-# LANGUAGE TemplateHaskell        #-}
 {-# LANGUAGE UndecidableInstances   #-}
 -- | A timer is basically a histogram of the duration of a type of event and a meter of the rate of its occurrence.
 module Data.Metrics.Timer (
@@ -12,22 +12,22 @@ module Data.Metrics.Timer (
   time,
   module Data.Metrics.Types
 ) where
-import Control.Applicative
-import Control.Lens
-import Control.Lens.TH
-import Control.Monad.Base
-import Control.Monad.Primitive
+import           Control.Applicative
+import           Control.Lens
+import           Control.Lens.TH
+import           Control.Monad.Base
+import           Control.Monad.Primitive
+import qualified Data.Metrics.Histogram.Internal                  as H
+import           Data.Metrics.Internal
+import qualified Data.Metrics.Meter.Internal                      as M
 import qualified Data.Metrics.MovingAverage.ExponentiallyWeighted as E
-import qualified Data.Metrics.Histogram.Internal as H
-import qualified Data.Metrics.Meter.Internal as M
-import qualified Data.Metrics.Timer.Internal as P
-import qualified Data.Metrics.Reservoir.ExponentiallyDecaying as R
-import Data.Metrics.Internal
-import Data.Metrics.Types
-import Data.Primitive.MutVar
-import Data.Time.Clock
-import Data.Time.Clock.POSIX
-import System.Random.MWC
+import qualified Data.Metrics.Reservoir.ExponentiallyDecaying     as R
+import qualified Data.Metrics.Timer.Internal                      as P
+import           Data.Metrics.Types
+import           Data.Primitive.MutVar
+import           Data.Time.Clock
+import           Data.Time.Clock.POSIX
+import           System.Random.MWC
 
 -- | A measure of time statistics for the duration of an event
 data Timer m = Timer
@@ -45,7 +45,7 @@ instance (MonadBase b m, PrimMonad b) => Clear b m (Timer b) where
     updateRef (fromTimer t) $ P.clear ts
 
 instance (MonadBase b m, PrimMonad b) => Update b m (Timer b) Double where
-  update t x = liftBase $ do
+  update !t !x = liftBase $ do
     ts <- timerGetTime t
     updateRef (fromTimer t) $ P.update ts x
 
@@ -87,7 +87,7 @@ mkTimer mt s = liftBase $ do
   v <- newMutVar $ P.Timer ewmaMeter histogram
   return $ Timer v mt
 
--- | Create a standard "Timer" with an 
+-- | Create a standard "Timer" with an
 -- exponentially weighted moving average
 -- and an exponentially decaying histogram
 timer :: MonadBase IO m => m (Timer IO)
@@ -105,4 +105,3 @@ time t m = do
   tf <- liftBase gt
   update t $ realToFrac $ tf - ts
   return r
-
