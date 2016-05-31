@@ -1,9 +1,11 @@
+{-# LANGUAGE BangPatterns           #-}
 {-# LANGUAGE FlexibleContexts       #-}
 {-# LANGUAGE FlexibleInstances      #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE TemplateHaskell        #-}
 {-# LANGUAGE UndecidableInstances   #-}
+
 -- | A timer is basically a histogram of the duration of a type of event and a meter of the rate of its occurrence.
 module Data.Metrics.Timer (
   Timer,
