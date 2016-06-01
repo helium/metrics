@@ -51,7 +51,7 @@ mark t c m = ticked
   & fiveMinuteRate %~ updateMeter
   & fifteenMinuteRate %~ updateMeter
   where
-    updateMeter = M.update $ fromIntegral c
+    updateMeter = M.update $! fromIntegral c
     ticked = tickIfNecessary t m
 {-# INLINEABLE mark #-}
 
