@@ -47,7 +47,7 @@ instance (MonadBase b m, PrimMonad b) => Clear b m (Timer b) where
 instance (MonadBase b m, PrimMonad b) => Update b m (Timer b) Double where
   update t x = liftBase $ do
     ts <- timerGetTime t
-    updateRef (fromTimer t) $ P.update ts x
+    updateRef (fromTimer t) $! P.update ts x
 
 instance (MonadBase b m, PrimMonad b) => Count b m (Timer b) where
   count t = liftBase $ fmap P.count $ readMutVar (fromTimer t)
