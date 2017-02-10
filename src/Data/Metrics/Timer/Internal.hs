@@ -1,6 +1,7 @@
-{-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_HADDOCK hide #-}
 {-# LANGUAGE FunctionalDependencies #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE MultiParamTypeClasses  #-}
+{-# LANGUAGE TemplateHaskell        #-}
 -- | A timer is essentially just a data type that combines
 -- a "Meter" and a "Histogram" to track both the rate at which
 -- events are triggered as well as timing statistics about the calls.
